@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 
 class ErrorAlertViewController: UIViewController {
-
+    
     internal func showErrorAlert(title: String, defaultMessage: String, errors: [NSError]) {
         var message = defaultMessage
         if !errors.isEmpty {

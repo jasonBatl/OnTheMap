@@ -13,6 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     
     var window: UIWindow?
+    var user: Users?
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
@@ -44,25 +45,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
-/*extension AppDelegate {
-    
-    func escapedParameters(parameters: [String: AnyObject]) -> String {
-        
-        var urlVars = [String]()
-        
-        for (key, value) in parameters {
-            
-            //make sure it is a string value
-            let stringValue = "\(value)"
-            
-            //escape it
-            let escapedValue = stringValue.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
-            
-            //append it
-            urlVars += [key + "=" + "\(escapedValue)"]
-        }
-        
-        return (!urlVars.isEmpty ? "?" : "") + join("&", urlVars)
-    }
-}
-*/

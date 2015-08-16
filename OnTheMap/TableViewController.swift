@@ -12,11 +12,10 @@ class TableViewController: LocationViewController, UITableViewDataSource, UITabl
 
     @IBOutlet weak var tableView: UITableView!
     
+    var students =  [StudentInformation]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadLocationData(){
-            self.tableView.reloadData()
-        }
         tableView.delegate = self
         tableView.dataSource = self
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "didRefreshLocationData", name: refreshNotification, object: nil)
@@ -30,11 +29,12 @@ class TableViewController: LocationViewController, UITableViewDataSource, UITabl
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         var cell = tableView.dequeueReusableCellWithIdentifier("tableCell") as! UITableViewCell
-        if StudentLocation.locations.count > indexPath.row {
-            let studentInfo = StudentLocation.locations[indexPath.row]
-            cell.textLabel!.text = studentInfo.title
-            cell.imageView!.image = UIImage(named: "locationIcon")
-        }
+        
+        let studentInfo = self.studentInformations[indexPath.row]
+        cell.textLabel?.text = studentInfo.firstName + " " + studentInfo.lastName
+        cell.detailTextLabel?.text = studentInfo.mediaURL
+        cell.imageView!.image = UIImage(named: "locationIcon")
+        
         return cell
     }
 
@@ -42,16 +42,21 @@ class TableViewController: LocationViewController, UITableViewDataSource, UITabl
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Return the number of rows in the section.
-        return StudentLocation.locations.count
+        return studentInformations.count
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if StudentLocation.locations.count > indexPath.row {
-            let studentInfo = StudentLocation.locations[indexPath.row]
-            if let url = NSURL(string: studentInfo.mediaURL) {
-                UIApplication.sharedApplication().openURL(url)
+        
+            let url = self.students[indexPath.row].mediaURL
+            
+            func openURL(URL:String) {
+                if let link = NSURL(string: url){
+                    UIApplication.sharedApplication().openURL(link)
+                    return
+                }
             }
-        }
+           
+        
     }
 
 }

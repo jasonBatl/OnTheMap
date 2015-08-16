@@ -19,26 +19,45 @@ class MapKitViewController: LocationViewController, MKMapViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
-        tapGesture = UITapGestureRecognizer(target: self, action: "tapped:")
-        loadLocationData() {
-            self.loadAnnotations()
-        }
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didRefreshLocationData", name: refreshNotification, object: nil)
     }
 
-    func didRefreshLocationData() {
-        self.mapView.removeAnnotations(StudentLocation.locations)
-        self.loadAnnotations()
+    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+        if let annotation = annotation as? PinAnnotation {
+            let identifier = "pin"
+            var view: MKPinAnnotationView
+            if let dequeuedView = mapView.dequeueReusableAnnotationViewWithIdentifier(identifier) as? MKPinAnnotationView {
+                dequeuedView.annotation = annotation
+                view = dequeuedView
+            } else {
+                view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+                view.canShowCallout = true
+                view.calloutOffset = CGPoint(x: -5, y: 5)
+            }
+            return view
+        }
+        return nil
     }
     
-    //add annotations
-    func loadAnnotations() {
-        let coord = StudentLocation.locations[0].coordinate
-        let initialLocation = CLLocation(latitude: coord.latitude, longitude: coord.longitude)
-        centerMapOnLocation(initialLocation)
-        for location in StudentLocation.locations {
-            mapView.addAnnotation(location)
+    //save view
+    func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView!) {
+        view.addGestureRecognizer(tapGesture)
+        selectedView = view
+    }
+    
+    //forget saved view
+    func mapView(mapView: MKMapView!, didDeselectAnnotationView view: MKAnnotationView!) {
+        selectedView = nil
+        view.removeGestureRecognizer(tapGesture)
+    }
+    
+    //open url for saved view
+    func tapped(sender: MapKitViewController) {
+        if let studentInfo = selectedView!.annotation as? StudentInformation,
+            let url = NSURL(string: studentInfo.mediaURL)
+        {
+            UIApplication.sharedApplication().openURL(url)
         }
+        
     }
     
     //center map

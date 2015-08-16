@@ -15,28 +15,22 @@ class LocationViewController: ErrorAlertViewController {
     
     let refreshNotification = "Location Data Refreshing"
     
+    //stores the pins
+    var studentInformations = [StudentInformation]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.setRightBarButtonItems([refreshButton, locationIcon], animated: false)
+        loadLocationData()
     }
     
     @IBAction func refreshPressed(sender: UIBarButtonItem) {
-        self.loadLocationData(forceRefresh:true) {
-            NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: self.refreshNotification, object: self))
-        }
-        
+        self.loadLocationData()
     }
     
     @IBAction func logoutPressed(sender: UIBarButtonItem) {
-        sender.enabled = false
-        Users.logOut() { success in
-            sender.enabled = true
-            if !success {
-                self.showErrorAlert("Logout Unsuccessful", defaultMessage: "Could not log you out", errors: Users.errors)
-            } else {
-                self.dismissViewControllerAnimated(true, completion: nil)
-            }
-        }
+        sender.enabled = true
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     
@@ -45,14 +39,25 @@ class LocationViewController: ErrorAlertViewController {
         performSegueWithIdentifier("showPost", sender: self)
     }
     
-    internal func loadLocationData(forceRefresh: Bool = false, didComplete: (() -> Void)?) {
-        StudentLocation.getRecent(forceRefresh: forceRefresh) { success in
-            if !success {
-                self.showErrorAlert("Error Loading Locations", defaultMessage: "Loading failed.", errors: StudentLocation.errors)
-            } else if !StudentLocation.locations.isEmpty && didComplete != nil{
-                didComplete!()
+    func loadLocationData() {
+        
+        //Download student info
+        var infoApi = StudentLocation()
+        infoApi.getRecentStudents() { (info, success, error) in
+            if success {
+                self.studentInformations = info!
+                self.useInfo()
+            } else {
+                let alert = UIAlertView()
+                alert.title = "issue retriving data"
+                alert.message = "could not load data. Try again."
+                alert.addButtonWithTitle("Ok")
+                dispatch_async(dispatch_get_main_queue(),{
+                  alert.show()
+                })
             }
         }
     }
     
+    func useInfo(){}
 }

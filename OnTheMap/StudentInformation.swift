@@ -7,36 +7,46 @@
 //
 
 import Foundation
-import MapKit
 
-class StudentInformation: NSObject, MKAnnotation {
-    var coordinate: CLLocationCoordinate2D
-    var firstName: String
-    var lastName: String
-    var mediaURL: String
+
+struct StudentInformation {
     
-    var title: String
-    var subtitle: String
+  
+    var firstName = ""
+    var lastName = ""
+    var mediaURL = ""
+    var mapString = ""
+    var latitude = 0.0
+    var longitude = 0.0
+    var objectID = ""
+    var uniqueKey = ""
     
-    init(data: NSDictionary) {
-        coordinate = CLLocationCoordinate2D( latitude: data["latitude"] as! Double, longitude: data["longitude"] as! Double)
-        firstName = data["firstName"] as! String
-        lastName = data["lastName"] as! String
-        mediaURL = data["mediaURL"] as! String
-        
-        title = "\(firstName) \(lastName)"
-        subtitle = mediaURL
-    }
     
-    class func isValidData(data: NSDictionary) -> Bool {
-        if let latitude = data["latitude"] as? Double,
-            let longitude = data["longitude"] as? Double,
-            let firstName = data["firstName"] as? String,
-            let lastName = data["lastName"] as? String,
-            let mediaUrl = data["mediaURL"] as? String
-        {
-            return true
+    init(dictionary: [String: AnyObject]) {
+        if let first = dictionary["firstName"] as? String {
+            firstName = first
         }
-        return false
+        if let last = dictionary["lastName"] as? String {
+            lastName = last
+        }
+        if let lat = dictionary["latitude"] as? Double {
+            latitude = lat
+        }
+        if let long = dictionary["longitude"] as? Double {
+            longitude = long
+        }
+        if let location = dictionary["mapString"] as? String {
+            mapString = location
+        }
+        if let url = dictionary["mediaURL"] as? String {
+            mediaURL = url
+        }
+        if let id = dictionary["objectID"] as? String {
+            objectID = id
+        }
+        if let key = dictionary["uniqueKey"] as? String {
+            uniqueKey = key
+        }
     }
+
 }

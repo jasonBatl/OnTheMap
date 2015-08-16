@@ -9,6 +9,7 @@
 import UIKit
 import MapKit
 
+
 class PostLocationViewController: ErrorAlertViewController, MKMapViewDelegate, UITextFieldDelegate {
     
     @IBOutlet weak var MapView: MKMapView!
@@ -22,7 +23,10 @@ class PostLocationViewController: ErrorAlertViewController, MKMapViewDelegate, U
     
     var location: CLLocation?
     var mapString: String = ""
+    var activeStudent: StudentInformation?
+    var errors: [NSError] = []
     
+    var region: MKCoordinateRegion?
     
     @IBAction func cancelBtnPressed(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)
@@ -59,46 +63,36 @@ class PostLocationViewController: ErrorAlertViewController, MKMapViewDelegate, U
             
             startActivity()
             var geoLocator = CLGeocoder()
-            geoLocator.geocodeAddressString(text, completionHandler: didCompleteGeolocating)
+            geoLocator.geocodeAddressString(locationTextField.text){ info, error in
+                if let e = error {
+                    self.activityIndicator.hidden = true
+                    self.showErrorAlert("Location error", defaultMessage: "Could not find your location", errors: self.errors)
+                } else {
+                    if let places = info as? [CLPlacemark]{
+                        let coordinate = places[0].location.coordinate
+                        let span = MKCoordinateSpan(latitudeDelta: 3, longitudeDelta: 3)
+                        self.region = MKCoordinateRegion(center: coordinate, span: span)
+                        self.MapView.setRegion(self.region!, animated: true)
+                        self.submitBtn.enabled = true
+                        
+                        var dropPin = MKPointAnnotation()
+                        dropPin.coordinate = coordinate
+                        self.MapView.addAnnotation(dropPin)
+                        
+                        self.activityIndicator.hidden = true
+                        self.urlTextField.hidden = false
+                        self.submitBtn.hidden = false
+                        self.directionsLabel.text = "Add your URL!"
+                        self.locationTextField.hidden = true
+                        self.findMeBtn.hidden = true
+                    }
+                }
+            }
             
         }
     }
     
-    //Geolocating completion
-    func didCompleteGeolocating(placemarks: [AnyObject]!, error: NSError!) {
-        stopActivity()
-        
-        if error == nil && placemarks.count > 0 {
-            
-            //set the pin
-            let placemark = placemarks[0] as! CLPlacemark
-            let geoLocation = placemark.location!
-            centerMapOnLocation(geoLocation)
-            
-            var studentInfo = StudentInformation(data: [
-                "firstName": Users.firstName,
-                "lastName": Users.lastName,
-                "latitude": geoLocation.coordinate.latitude,
-                "longitude": geoLocation.coordinate.longitude,
-                "mediaURL": ""
-                ])
-            MapView.addAnnotation(studentInfo)
-            urlTextField.hidden = false
-            submitBtn.hidden = false
-            directionsLabel.text = "Add your URL!"
-            locationTextField.hidden = true
-            findMeBtn.hidden = true
-            
-            
-            mapString = locationTextField.text
-            location = geoLocation
-        } else {
-            
-            //Show error to user indicating the post failed
-            showErrorAlert("Error Geolocating", defaultMessage: "Could not find location", errors: [error])
-        }
-    }
-    
+ 
     
     func startActivity() {
         activityIndicator.startAnimating()
@@ -109,7 +103,7 @@ class PostLocationViewController: ErrorAlertViewController, MKMapViewDelegate, U
     }
     
     func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
-        if let annotation = annotation as? StudentInformation {
+        if let annotation = annotation as? PinAnnotation {
             let identifier  = "pin"
             var view: MKPinAnnotationView
             if let dequeuedView = MapView.dequeueReusableAnnotationViewWithIdentifier(identifier) as? MKPinAnnotationView {
@@ -128,17 +122,27 @@ class PostLocationViewController: ErrorAlertViewController, MKMapViewDelegate, U
         if !urlTextField.text.isEmpty && location != nil {
             let coord = location!.coordinate
             let text = urlTextField.text
-            StudentLocation.newLocation(coord.latitude, longitude: coord.longitude, mediaURL: text, mapString: mapString) { success in
+            StudentLocation().parseLocationData(buildInfo()) { success in
                     self.dismissViewControllerAnimated(true, completion: nil)
             }
         }
     }
     
-
-    //Centers map on a location from raywenderlich.com
-    func centerMapOnLocation(location: CLLocation) {
-        let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, 20000, 20000)
-        MapView.setRegion(coordinateRegion, animated: true)
+    func buildInfo() -> [String: AnyObject] {
+        if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate{
+            let hash: [String: AnyObject] = [
+                "firstName": appDelegate.user!.firstName,
+                "lastName": appDelegate.user!.lastName,
+                "latitude": region!.center.latitude,
+                "longitude": region!.center.longitude,
+                "mapString": mapString,
+                "mediaURL": urlTextField.text,
+                "uniqueKey": appDelegate.user!.id
+            ]
+            return hash
+        }
+        return [:]
     }
+    
 
 }

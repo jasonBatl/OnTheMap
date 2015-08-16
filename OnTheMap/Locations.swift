@@ -7,87 +7,59 @@
 //
 
 import Foundation
+import MapKit
 
 class StudentLocation {
     
-    static let appId = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
-    static let apiKey = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
+    //static var locations: [PinAnnotation] = []
+    //static var errors: [NSError] = []
     
-    static var locations: [StudentInformation] = []
-    static var errors: [NSError] = []
-    
-    
-    //gets posted study locations w/o making a request
-    class func getRecent(forceRefresh: Bool = true, didComplete: (success: Bool) -> Void) {
-        if forceRefresh || locations.isEmpty {
-            locations = []
-            let request = NSMutableURLRequest(URL: NSURL(string: "https://api.parse.com/1/classes/StudentLocation?limit=100&order=-createdAt")!)
-            request.addValue(StudentLocation.appId, forHTTPHeaderField: "X-Parse-Application-Id")
-            request.addValue(StudentLocation.apiKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
-            
-            let session = NSURLSession.sharedSession()
-            
-            //make the request
-            let task = session.dataTaskWithRequest(request) { data, response, error in
-                
-                if error != nil {
-                    self.errors.append(error)
-                    didComplete(success: false)
-                    return
+    func getRecentStudents(completionHandler: (pins: [StudentInformation]?, success:Bool, error: String?) -> Void) {
+        var headers = APIHelper.buildHeaders()
+        var getInfoRequest = APIHelper.getRequest(APIHelper.BaseURLs.MapAPI, api: APIHelper.APIs.StudentLocation, headers: headers, queryString: [String: String]())
+        var task = APIHelper.buildTask(getInfoRequest){ (data, error) in
+            if let e = error{
+                completionHandler(pins: nil, success: false, error: "Could not get info from server")
+            } else {
+                let response = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: nil) as? [String: AnyObject]
+                if let error = response!["error"] as? String{
+                    completionHandler(pins: nil, success: false, error: error)
+                } else {
+                    var pins = [StudentInformation]()
+                    var pinsJSON = response!["results"] as! [[String: AnyObject]]
+                    for pinJSON in pinsJSON {
+                        pins.append(self.buildPin(pinJSON))
+                    }
+                    completionHandler(pins: pins, success: true, error: nil)
                 }
-                let success = StudentLocation.parseLocationData(data)
-                didComplete(success: success)
-                
             }
-            task.resume()
-        }
-        else if !locations.isEmpty {
-            didComplete(success: true)
         }
     }
     
-    
+
     //Parse location data into StudentInformation
-    class func parseLocationData(data: NSData) -> Bool {
-        var success = false
-        if let locationData = NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers, error: nil) as? NSDictionary {
-            if let data = locationData["results"] as? [NSDictionary] {
-                success = true
-                for studentInfo in data {
-                    if !StudentInformation.isValidData(studentInfo) {
-                        success = false
-                        break
-                    }
-                    locations.append(StudentInformation(data: studentInfo))
+    func parseLocationData(body: [String: AnyObject], completionHandler: (success: Bool, error:String?) -> Void) {
+        var headers = APIHelper.buildHeaders()
+        var postInfoRequest = APIHelper.postRequest(APIHelper.BaseURLs.MapAPI, api: APIHelper.APIs.StudentLocation, body: body, headers: headers, queryString: [:])
+        var task = APIHelper.buildTask(postInfoRequest) { (data, error) in
+            if let e = error {
+                completionHandler(success: false, error: "Could not get info from server")
+            } else {
+                let response = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: nil) as? [String: AnyObject]
+                if let error = response!["error"] as? String{
+                    completionHandler(success: false, error: error)
+                } else {
+                    completionHandler(success: true, error: nil)
                 }
             }
         }
-        if !success {
-            errors.append(NSError(domain: "Location data error parsing", code: 1, userInfo: nil))
-        }
-        return success
         
     }
     
-    //Store new location in the db with POST method
-    class func newLocation(latitude: Double, longitude: Double, mediaURL: String, mapString: String, didComplete: (success: Bool) -> Void) {
-    
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://api.parse.com/1/classes/StudentLocation")!)
-        request.HTTPMethod = "POST"
-        request.addValue(StudentLocation.appId, forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue(StudentLocation.apiKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        let bodyString = "{\"uniqueKey\": \"\(Users.key)\", \"firstName\": \"\(Users.firstName)\", \"lastName\": \"\(Users.lastName)\", \"mapString\": \"\(mapString)\", \"mediaURL\": \"\(mediaURL)\",\"latitude\": \(latitude), \"longitude\": \(longitude)}"
-        request.HTTPBody = bodyString.dataUsingEncoding(NSUTF8StringEncoding)
-        let session = NSURLSession.sharedSession()
-        let task = session.dataTaskWithRequest(request) { data, response, error in
-            if error != nil {
-                self.errors.append(error)
-                didComplete(success: false)
-                return
-            }
-            didComplete(success: true)
-        }
-        task.resume()
+
+    func buildPin(jsonResponse: [String: AnyObject]) -> StudentInformation {
+        let pin = StudentInformation(dictionary: jsonResponse)
+        return pin
     }
+    
 }

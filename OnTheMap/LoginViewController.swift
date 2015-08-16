@@ -8,11 +8,9 @@
 
 import UIKit
 
-class LoginViewController: ErrorAlertViewController, UINavigationControllerDelegate {
+class LoginViewController: UIViewController, UINavigationControllerDelegate {
     
-    var appDelegate: AppDelegate!
-    var session: NSURLSession!
-    
+   
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var debugTextLabel: UILabel!
@@ -25,9 +23,9 @@ class LoginViewController: ErrorAlertViewController, UINavigationControllerDeleg
     
     @IBAction func loginBtn(sender: AnyObject) {
         if usernameTextField!.text.isEmpty {
-            debugTextLabel.text = "Username is required"
+            self.displayError("Username is required")
         } else if passwordTextField.text.isEmpty {
-            debugTextLabel.text = "Password is required"
+            self.displayError("Password is required")
         } else {
             loginToUdacity()
             loginBtn.titleLabel?.text = "Loggin in, plz wait..."
@@ -36,24 +34,32 @@ class LoginViewController: ErrorAlertViewController, UINavigationControllerDeleg
     }
     
     func loginToUdacity() {
+        loginBtn.enabled = false
+    
         
-        if let username = usernameTextField.text, password = passwordTextField.text {
-            
-            //Check to see if the credentials are valid and switch back to main thread
-            Users.login(username, password: password) { (success, errorMessage) in
-                if success {
-                    NSOperationQueue.mainQueue().addOperationWithBlock {
-                        self.performSegueWithIdentifier("showTabbedView", sender: self)
-                    }
-                } else {
-                    if let message = errorMessage {
-                         NSOperationQueue.mainQueue().addOperationWithBlock {
-                            self.showErrorAlert("Could not log you in.", defaultMessage: message, errors: Users.errors)
+        //Check to see if the credentials are valid and switch back to main thread
+        Login().attemptToLogIn(usernameTextField.text, passwordTextField: passwordTextField.text){ (success, error) in
+            if success {
+                if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
+                    var user = appDelegate.user
+                    Login().getUserInfo(user!.key) { (success, error) in
+                        if success {
+                            dispatch_async(dispatch_get_main_queue(), {
+                                let controller = self.storyboard!.instantiateViewControllerWithIdentifier("showTabbedView") as! UINavigationController
+                                self.presentViewController(controller,animated: true, completion:nil)
+                            })
+                        } else {
+                            self.displayError("There was an issue loggin you in.")
                         }
                     }
+                } else {
+                    self.displayError(error)
                 }
+            } else {
+                self.displayError(error)
             }
         }
+        
     }
     
     
@@ -61,10 +67,10 @@ class LoginViewController: ErrorAlertViewController, UINavigationControllerDeleg
         super.viewDidLoad()
               
         /* Get the app delegate */
-        appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate{
+            appDelegate.user = Users(dictionary: [:])
+        }
         
-        /* Get the shared URL session */
-        session = NSURLSession.sharedSession()
         
         //set color of buttons and labels
         loginBtn.backgroundColor = UIColor.customColor(redValue: 106, greenValue: 106, blueValue: 106, alpha: 1)
@@ -101,6 +107,19 @@ class LoginViewController: ErrorAlertViewController, UINavigationControllerDeleg
         }
         
         return true
+    }
+    
+    func displayError(error: String?) {
+        let alert = UIAlertView()
+        alert.title = "Error"
+        alert.message = error
+        alert.addButtonWithTitle("OK")
+        dispatch_async(dispatch_get_main_queue(), {
+            if let errorString = error {
+                alert.show()
+            }
+        })
+        loginBtn.enabled = true
     }
     
     
