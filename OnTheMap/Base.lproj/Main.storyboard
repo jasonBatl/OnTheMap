@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -79,7 +79,7 @@
                                     </mask>
                                 </variation>
                                 <connections>
-                                    <action selector="loginBtn:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Jpd-m2-3Q2"/>
+                                    <action selector="loginBtnClicked:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="ywK-xw-yXJ"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V4V-cf-CGC">
@@ -152,13 +152,13 @@
                     </view>
                     <connections>
                         <outlet property="debugTextLabel" destination="V4V-cf-CGC" id="ibe-LR-ing"/>
+                        <outlet property="email" destination="rU8-gX-kYz" id="tRJ-89-1bj"/>
                         <outlet property="loginBtn" destination="4L6-Ey-KcO" id="LGd-eP-aQV"/>
                         <outlet property="myGradientView" destination="Nyk-w4-Tqc" id="Gbq-ll-Cau"/>
+                        <outlet property="password" destination="TkC-lJ-nnY" id="mLh-3W-BoR"/>
                         <outlet property="passwordLabel" destination="NzC-fr-utt" id="ybP-7C-mcL"/>
-                        <outlet property="passwordTextField" destination="TkC-lJ-nnY" id="JLu-mM-DZN"/>
                         <outlet property="titleLabel" destination="6Vk-ZJ-gI2" id="qzM-mF-CBy"/>
                         <outlet property="userLabel" destination="sVV-bS-fjh" id="S9C-yE-KUr"/>
-                        <outlet property="usernameTextField" destination="rU8-gX-kYz" id="Sld-d8-m59"/>
                         <segue destination="fkO-CS-5w8" kind="show" identifier="showTabbedView" id="s7t-qz-b5V"/>
                     </connections>
                 </viewController>
@@ -217,9 +217,9 @@
                     </navigationItem>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="locationIcon" destination="bwi-0Y-l87" id="Kxk-1h-QrX"/>
+                        <outlet property="locationIcon" destination="GSk-VY-USa" id="xjr-Yf-96T"/>
                         <outlet property="mapView" destination="BVj-Os-O8e" id="A30-Yx-skg"/>
-                        <outlet property="refreshButton" destination="GSk-VY-USa" id="3xd-Y5-Qzj"/>
+                        <outlet property="refreshButton" destination="bwi-0Y-l87" id="4uJ-gS-1pg"/>
                         <segue destination="oCV-NY-S6V" kind="presentation" identifier="showPost" id="Fyp-lD-aBp"/>
                     </connections>
                 </viewController>

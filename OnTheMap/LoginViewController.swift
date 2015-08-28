@@ -8,67 +8,24 @@
 
 import UIKit
 
-class LoginViewController: UIViewController, UINavigationControllerDelegate {
+class LoginViewController: UIViewController {
     
    
-    @IBOutlet weak var usernameTextField: UITextField!
-    @IBOutlet weak var passwordTextField: UITextField!
+    @IBOutlet weak var email: UITextField!
+    @IBOutlet weak var password: UITextField!
     @IBOutlet weak var debugTextLabel: UILabel!
     @IBOutlet weak var loginBtn: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var passwordLabel: UILabel!
     @IBOutlet weak var userLabel: UILabel!
     @IBOutlet weak var myGradientView: GradientView!
-        
-    
-    @IBAction func loginBtn(sender: AnyObject) {
-        if usernameTextField!.text.isEmpty {
-            self.displayError("Username is required")
-        } else if passwordTextField.text.isEmpty {
-            self.displayError("Password is required")
-        } else {
-            loginToUdacity()
-            loginBtn.titleLabel?.text = "Loggin in, plz wait..."
-            
-        }
-    }
-    
-    func loginToUdacity() {
-        loginBtn.enabled = false
-    
-        
-        //Check to see if the credentials are valid and switch back to main thread
-        Login().attemptToLogIn(usernameTextField.text, passwordTextField: passwordTextField.text){ (success, error) in
-            if success {
-                if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
-                    var user = appDelegate.user
-                    Login().getUserInfo(user!.key) { (success, error) in
-                        if success {
-                            dispatch_async(dispatch_get_main_queue(), {
-                                let controller = self.storyboard!.instantiateViewControllerWithIdentifier("showTabbedView") as! UINavigationController
-                                self.presentViewController(controller,animated: true, completion:nil)
-                            })
-                        } else {
-                            self.displayError("There was an issue loggin you in.")
-                        }
-                    }
-                } else {
-                    self.displayError(error)
-                }
-            } else {
-                self.displayError(error)
-            }
-        }
-        
-    }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-              
+        
         /* Get the app delegate */
         if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate{
-            appDelegate.user = Users(dictionary: [:])
+            appDelegate.user = User(dictionary: [:])
         }
         
         
@@ -80,8 +37,56 @@ class LoginViewController: UIViewController, UINavigationControllerDelegate {
         debugTextLabel.textColor = UIColor.customColor(redValue: 102, greenValue: 102, blueValue: 102, alpha: 1)
         
     }
+        
     
-    //set the background color
+    @IBAction func loginBtnClicked(sender: AnyObject) {
+        if email.text.isEmpty {
+            self.displayError("Username is required")
+        } else if password.text.isEmpty {
+            self.displayError("Password is required")
+        } else {
+        
+            loginBtn.titleLabel?.text = "Loggin in, plz wait..."
+            loginBtn.enabled = false
+            
+            //Check to see if the credentials are valid and switch back to main thread
+            Login().attemptToLogIn(email.text, password: password.text){ (success, error) in
+                if success {
+                    if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
+                        var user = appDelegate.user
+                        Login().getUserInfo(user!.key){ (success, error) in
+                            if success {
+                               self.logInSuccessful()
+                            } else {
+                                self.displayError("There was an issue loggin you in.")
+                                self.loginBtn.enabled = true
+                            }
+                        }
+                    } else {
+                        self.displayError(error)
+                        self.loginBtn.enabled = true
+                    }
+                } else {
+                    self.displayError(error)
+                    self.loginBtn.enabled = true
+                }
+            }
+            self.loginBtn.enabled = true
+            loginBtn.titleLabel?.text = "Log in"
+            
+        }
+    }
+    
+    func logInSuccessful() {
+        dispatch_async(dispatch_get_main_queue(), {
+            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("tabbedView") as! UITabBarController
+            self.presentViewController(controller, animated: true, completion: nil)
+        })
+    }
+    
+    
+    
+   //set the background color
     override func viewDidLayoutSubviews() {
         self.myGradientView.gradientWithColors()
     }
@@ -100,8 +105,8 @@ class LoginViewController: UIViewController, UINavigationControllerDelegate {
 
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         
-        if textField == usernameTextField {
-            passwordTextField.becomeFirstResponder()
+        if textField == email {
+            password.becomeFirstResponder()
         } else {
             textField.resignFirstResponder()
         }
@@ -121,7 +126,7 @@ class LoginViewController: UIViewController, UINavigationControllerDelegate {
         })
         loginBtn.enabled = true
     }
-    
+
     
     // keyboard notifications
     func subscribeToKeyboardNotifications() {
@@ -145,7 +150,7 @@ class LoginViewController: UIViewController, UINavigationControllerDelegate {
     func getKeyboardHeight(notification: NSNotification) -> CGFloat {
         let userInfo = notification.userInfo
         let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
-        if passwordTextField.editing {
+        if password.editing {
             return keyboardSize.CGRectValue().height
         } else {
             return 0

@@ -5,7 +5,7 @@
 //  Created by Bronson, Jason on 7/7/15.
 //  Copyright (c) 2015 Bronson, Jason. All rights reserved.
 //
-
+import Foundation
 import UIKit
 import MapKit
 
@@ -21,7 +21,7 @@ class PostLocationViewController: ErrorAlertViewController, MKMapViewDelegate, U
     @IBOutlet weak var findMeBtn: UIButton!
     @IBOutlet weak var cancelBtn: UIButton!
     
-    var location: CLLocation?
+    //var location: CLLocation?
     var mapString: String = ""
     var activeStudent: StudentInformation?
     var errors: [NSError] = []
@@ -35,7 +35,7 @@ class PostLocationViewController: ErrorAlertViewController, MKMapViewDelegate, U
     override func viewDidLoad() {
         super.viewDidLoad()
         MapView.delegate = self
-        var tapGesture = UITapGestureRecognizer(target: self, action: "didTapTextContainer:")
+        //var tapGesture = UITapGestureRecognizer(target: self, action: "didTapTextContainer:")
         locationTextField.delegate = self
         urlTextField.delegate = self
         
@@ -59,37 +59,36 @@ class PostLocationViewController: ErrorAlertViewController, MKMapViewDelegate, U
     @IBAction func findMePressed(sender: UIButton) {
         
         let text = locationTextField.text
-        if !text.isEmpty {
-            
-            startActivity()
-            var geoLocator = CLGeocoder()
-            geoLocator.geocodeAddressString(locationTextField.text){ info, error in
-                if let e = error {
+        
+        startActivity()
+        var geoLocator = CLGeocoder()
+        geoLocator.geocodeAddressString(locationTextField.text){ info, error in
+            if let e = error {
+                self.activityIndicator.hidden = true
+                self.showErrorAlert("Location error", defaultMessage: "Could not find your location", errors: self.errors)
+            } else {
+                if let places = info as? [CLPlacemark]{
+                    let coordinate = places[0].location.coordinate
+                    let span = MKCoordinateSpan(latitudeDelta: 3, longitudeDelta: 3)
+                    self.region = MKCoordinateRegion(center: coordinate, span: span)
+                    self.MapView.setRegion(self.region!, animated: true)
+                    self.submitBtn.enabled = true
+                    
+                    var dropPin = MKPointAnnotation()
+                    dropPin.coordinate = coordinate
+                    self.MapView.addAnnotation(dropPin)
+                    
                     self.activityIndicator.hidden = true
-                    self.showErrorAlert("Location error", defaultMessage: "Could not find your location", errors: self.errors)
-                } else {
-                    if let places = info as? [CLPlacemark]{
-                        let coordinate = places[0].location.coordinate
-                        let span = MKCoordinateSpan(latitudeDelta: 3, longitudeDelta: 3)
-                        self.region = MKCoordinateRegion(center: coordinate, span: span)
-                        self.MapView.setRegion(self.region!, animated: true)
-                        self.submitBtn.enabled = true
-                        
-                        var dropPin = MKPointAnnotation()
-                        dropPin.coordinate = coordinate
-                        self.MapView.addAnnotation(dropPin)
-                        
-                        self.activityIndicator.hidden = true
-                        self.urlTextField.hidden = false
-                        self.submitBtn.hidden = false
-                        self.directionsLabel.text = "Add your URL!"
-                        self.locationTextField.hidden = true
-                        self.findMeBtn.hidden = true
-                    }
+                    self.urlTextField.hidden = false
+                    self.submitBtn.hidden = false
+                    self.directionsLabel.text = "Add your URL!"
+                    self.locationTextField.hidden = true
+                    self.findMeBtn.hidden = true
                 }
             }
-            
         }
+            
+        
     }
     
  
@@ -119,11 +118,9 @@ class PostLocationViewController: ErrorAlertViewController, MKMapViewDelegate, U
     }
     
     @IBAction func submitBtnPressed(sender: UIButton) {
-        if !urlTextField.text.isEmpty && location != nil {
-            let coord = location!.coordinate
-            let text = urlTextField.text
-            StudentLocation().parseLocationData(buildInfo()) { success in
-                    self.dismissViewControllerAnimated(true, completion: nil)
+        if urlTextField.text != nil {
+                StudentLocation().POSTStudentInformation(buildInfo()) { (success, error) in
+                self.dismissViewControllerAnimated(true, completion: nil)
             }
         }
     }

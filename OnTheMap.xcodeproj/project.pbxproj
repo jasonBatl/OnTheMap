@@ -12,9 +12,7 @@
 		AB223B531B4B1E9B002F564D /* StudentInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB223B521B4B1E9B002F564D /* StudentInformation.swift */; };
 		AB223B551B4B22ED002F564D /* Locations.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB223B541B4B22ED002F564D /* Locations.swift */; };
 		AB223B591B4C7500002F564D /* PostLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB223B581B4C7500002F564D /* PostLocationViewController.swift */; };
-		AB223B5D1B4C8312002F564D /* LocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB223B5C1B4C8312002F564D /* LocationViewController.swift */; };
 		AB6EB6791B4DD9BC0072E7A7 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6EB6781B4DD9BC0072E7A7 /* TableViewController.swift */; };
-		AB6F036B1B7527A9002BE442 /* APIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6F036A1B7527A9002BE442 /* APIHelper.swift */; };
 		AB6F036D1B75388B002BE442 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6F036C1B75388B002BE442 /* Login.swift */; };
 		AB702AF71B6551C6008F1F84 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB702AF61B6551C6008F1F84 /* GradientView.swift */; };
 		AB9979F61B322C0400E1C1F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9979F51B322C0400E1C1F2 /* AppDelegate.swift */; };
@@ -23,10 +21,13 @@
 		AB9979FD1B322C0400E1C1F2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB9979FC1B322C0400E1C1F2 /* Images.xcassets */; };
 		AB997A001B322C0400E1C1F2 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB9979FE1B322C0400E1C1F2 /* LaunchScreen.xib */; };
 		AB997A0C1B322C0400E1C1F2 /* OnTheMapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB997A0B1B322C0400E1C1F2 /* OnTheMapTests.swift */; };
-		AB997A181B3A011D00E1C1F2 /* users.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB997A171B3A011D00E1C1F2 /* users.swift */; };
+		AB997A181B3A011D00E1C1F2 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB997A171B3A011D00E1C1F2 /* User.swift */; };
 		AB997A1A1B3B16AB00E1C1F2 /* ErrorAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB997A191B3B16AB00E1C1F2 /* ErrorAlertViewController.swift */; };
 		ABE3B3681B5ACFB0001BF649 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABE3B3671B5ACFB0001BF649 /* MapKit.framework */; };
 		ABE3B36A1B5EFB54001BF649 /* colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE3B3691B5EFB54001BF649 /* colors.swift */; };
+		ABE3CE311B90D6660085C070 /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE3CE301B90D6660085C070 /* TabViewController.swift */; };
+		ABE3CE331B90EEF50085C070 /* LoginViewController-BU.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE3CE321B90EEF50085C070 /* LoginViewController-BU.swift */; };
+		ABE3CE351B90EF440085C070 /* APIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE3CE341B90EF440085C070 /* APIHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,9 +46,7 @@
 		AB223B521B4B1E9B002F564D /* StudentInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentInformation.swift; sourceTree = "<group>"; };
 		AB223B541B4B22ED002F564D /* Locations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Locations.swift; path = OnTheMap/Locations.swift; sourceTree = "<group>"; };
 		AB223B581B4C7500002F564D /* PostLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostLocationViewController.swift; path = OnTheMap/PostLocationViewController.swift; sourceTree = "<group>"; };
-		AB223B5C1B4C8312002F564D /* LocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationViewController.swift; path = OnTheMap/LocationViewController.swift; sourceTree = "<group>"; };
 		AB6EB6781B4DD9BC0072E7A7 /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TableViewController.swift; path = OnTheMap/TableViewController.swift; sourceTree = "<group>"; };
-		AB6F036A1B7527A9002BE442 /* APIHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIHelper.swift; sourceTree = "<group>"; };
 		AB6F036C1B75388B002BE442 /* Login.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Login.swift; path = OnTheMap/Login.swift; sourceTree = "<group>"; };
 		AB702AF61B6551C6008F1F84 /* GradientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		AB9979F01B322C0400E1C1F2 /* OnTheMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -60,10 +59,13 @@
 		AB997A051B322C0400E1C1F2 /* OnTheMapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnTheMapTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB997A0A1B322C0400E1C1F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AB997A0B1B322C0400E1C1F2 /* OnTheMapTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnTheMapTests.swift; sourceTree = "<group>"; };
-		AB997A171B3A011D00E1C1F2 /* users.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = users.swift; sourceTree = "<group>"; };
+		AB997A171B3A011D00E1C1F2 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		AB997A191B3B16AB00E1C1F2 /* ErrorAlertViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ErrorAlertViewController.swift; path = OnTheMap/ErrorAlertViewController.swift; sourceTree = "<group>"; };
 		ABE3B3671B5ACFB0001BF649 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		ABE3B3691B5EFB54001BF649 /* colors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = colors.swift; sourceTree = "<group>"; };
+		ABE3CE301B90D6660085C070 /* TabViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TabViewController.swift; path = OnTheMap/TabViewController.swift; sourceTree = "<group>"; };
+		ABE3CE321B90EEF50085C070 /* LoginViewController-BU.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "LoginViewController-BU.swift"; path = "../../../Desktop/LoginViewController-BU.swift"; sourceTree = "<group>"; };
+		ABE3CE341B90EF440085C070 /* APIHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = APIHelper.swift; path = OnTheMap/APIHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,8 +90,8 @@
 		AB6F036E1B8115DC002BE442 /* API */ = {
 			isa = PBXGroup;
 			children = (
+				ABE3CE341B90EF440085C070 /* APIHelper.swift */,
 				AB6F036C1B75388B002BE442 /* Login.swift */,
-				AB6F036A1B7527A9002BE442 /* APIHelper.swift */,
 				AB223B541B4B22ED002F564D /* Locations.swift */,
 			);
 			name = API;
@@ -100,12 +102,13 @@
 			isa = PBXGroup;
 			children = (
 				AB9979F71B322C0400E1C1F2 /* LoginViewController.swift */,
+				ABE3CE321B90EEF50085C070 /* LoginViewController-BU.swift */,
 				AB223B501B44767C002F564D /* MapKitViewController.swift */,
 				AB6EB6781B4DD9BC0072E7A7 /* TableViewController.swift */,
-				AB997A191B3B16AB00E1C1F2 /* ErrorAlertViewController.swift */,
-				AB223B5C1B4C8312002F564D /* LocationViewController.swift */,
-				AB223B581B4C7500002F564D /* PostLocationViewController.swift */,
+				ABE3CE301B90D6660085C070 /* TabViewController.swift */,
 				AB16D6161B697E3200D7DCC1 /* PinAnnotation.swift */,
+				AB997A191B3B16AB00E1C1F2 /* ErrorAlertViewController.swift */,
+				AB223B581B4C7500002F564D /* PostLocationViewController.swift */,
 			);
 			name = Controllers;
 			path = ..;
@@ -173,7 +176,7 @@
 		ABFBE1BD1B5305E90068B4F1 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				AB997A171B3A011D00E1C1F2 /* users.swift */,
+				AB997A171B3A011D00E1C1F2 /* User.swift */,
 				ABE3B3691B5EFB54001BF649 /* colors.swift */,
 				AB702AF61B6551C6008F1F84 /* GradientView.swift */,
 				AB223B521B4B1E9B002F564D /* StudentInformation.swift */,
@@ -284,14 +287,15 @@
 				AB223B531B4B1E9B002F564D /* StudentInformation.swift in Sources */,
 				ABE3B36A1B5EFB54001BF649 /* colors.swift in Sources */,
 				AB9979F81B322C0400E1C1F2 /* LoginViewController.swift in Sources */,
-				AB6F036B1B7527A9002BE442 /* APIHelper.swift in Sources */,
+				ABE3CE331B90EEF50085C070 /* LoginViewController-BU.swift in Sources */,
 				AB223B591B4C7500002F564D /* PostLocationViewController.swift in Sources */,
 				AB223B511B44767C002F564D /* MapKitViewController.swift in Sources */,
 				AB223B551B4B22ED002F564D /* Locations.swift in Sources */,
+				ABE3CE351B90EF440085C070 /* APIHelper.swift in Sources */,
 				AB16D6171B697E3200D7DCC1 /* PinAnnotation.swift in Sources */,
-				AB223B5D1B4C8312002F564D /* LocationViewController.swift in Sources */,
+				ABE3CE311B90D6660085C070 /* TabViewController.swift in Sources */,
 				AB6EB6791B4DD9BC0072E7A7 /* TableViewController.swift in Sources */,
-				AB997A181B3A011D00E1C1F2 /* users.swift in Sources */,
+				AB997A181B3A011D00E1C1F2 /* User.swift in Sources */,
 				AB702AF71B6551C6008F1F84 /* GradientView.swift in Sources */,
 				AB997A1A1B3B16AB00E1C1F2 /* ErrorAlertViewController.swift in Sources */,
 				AB9979F61B322C0400E1C1F2 /* AppDelegate.swift in Sources */,

@@ -8,64 +8,55 @@
 
 import UIKit
 import MapKit
+import Foundation
 
-class MapKitViewController: LocationViewController, MKMapViewDelegate {
+class MapKitViewController: TabViewController, MKMapViewDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
-    
-    var selectedView: MKAnnotationView?
-    var tapGesture: UITapGestureRecognizer!
+   
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         mapView.delegate = self
     }
-
+    
     func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
-        if let annotation = annotation as? PinAnnotation {
-            let identifier = "pin"
-            var view: MKPinAnnotationView
-            if let dequeuedView = mapView.dequeueReusableAnnotationViewWithIdentifier(identifier) as? MKPinAnnotationView {
-                dequeuedView.annotation = annotation
-                view = dequeuedView
-            } else {
-                view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-                view.canShowCallout = true
-                view.calloutOffset = CGPoint(x: -5, y: 5)
-            }
-            return view
+        if annotation is MKPointAnnotation {
+            let pinAnnotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "pin")
+            
+            pinAnnotationView.draggable = true
+            pinAnnotationView.canShowCallout = true
+            
+            let infoButton = UIButton.buttonWithType(UIButtonType.InfoLight) as! UIButton
+            infoButton.setImage(UIImage(named: "info"), forState: .Normal)
+            
+            pinAnnotationView.leftCalloutAccessoryView = infoButton
+            return pinAnnotationView
         }
+        
         return nil
     }
     
-    //save view
-    func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView!) {
-        view.addGestureRecognizer(tapGesture)
-        selectedView = view
+    func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!) {
+        goToURL(view.annotation.subtitle!)
     }
     
-    //forget saved view
-    func mapView(mapView: MKMapView!, didDeselectAnnotationView view: MKAnnotationView!) {
-        selectedView = nil
-        view.removeGestureRecognizer(tapGesture)
-    }
-    
-    //open url for saved view
-    func tapped(sender: MapKitViewController) {
-        if let studentInfo = selectedView!.annotation as? StudentInformation,
-            let url = NSURL(string: studentInfo.mediaURL)
-        {
-            UIApplication.sharedApplication().openURL(url)
+    override func useInfo(){
+        for info in studentInformations{
+            var location = CLLocationCoordinate2DMake(info.latitude, info.longitude)
+            // Drop a pindrop
+            var dropPin = MKPointAnnotation()
+            dropPin.coordinate = location
+            dropPin.title = info.mapString
+            dropPin.subtitle = info.mediaURL
+            mapView.addAnnotation(dropPin)
+            
         }
         
     }
     
-    //center map
-    func centerMapOnLocation(location: CLLocation) {
-        let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, 2000000, 2000000)
-        mapView.setRegion(coordinateRegion, animated: true)
-    }
-    
+     
 
     
 }

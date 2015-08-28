@@ -10,19 +10,16 @@ import Foundation
 
 
 struct StudentInformation {
-    
-  
     var firstName = ""
     var lastName = ""
-    var mediaURL = ""
-    var mapString = ""
     var latitude = 0.0
     var longitude = 0.0
+    var mapString = ""
+    var mediaURL = "Google.com"
     var objectID = ""
     var uniqueKey = ""
     
-    
-    init(dictionary: [String: AnyObject]) {
+    init(dictionary: [String: AnyObject]){
         if let first = dictionary["firstName"] as? String {
             firstName = first
         }
@@ -48,5 +45,4 @@ struct StudentInformation {
             uniqueKey = key
         }
     }
-
 }

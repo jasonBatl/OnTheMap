@@ -13,7 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     
     var window: UIWindow?
-    var user: Users?
+    var user: User?
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.

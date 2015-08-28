@@ -9,12 +9,12 @@
 import Foundation
 
 class APIHelper {
-    struct MapKeys {
-        static let appId = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
-        static let apiKey = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
+    struct MapKeys{
+        static let ParseApplicationID = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
+        static let ParseAPIKey = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
     }
     
-    static let JSON = "application/JSON"
+    static let JSON = "application/json"
     static let session = NSURLSession.sharedSession()
     
     struct BaseURLs {
@@ -90,13 +90,5 @@ class APIHelper {
         }
         
         return (!urlVars.isEmpty ? "?" : "") + join("&", urlVars)
-    }
-    
-    
-    static func buildHeaders() -> [String: String] {
-        return [
-            "X-Parse-Application-Id": MapKeys.appId,
-            "X-Parse-REST-API-Key": MapKeys.apiKey
-        ]
     }
 }

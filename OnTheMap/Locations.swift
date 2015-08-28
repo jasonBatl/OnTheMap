@@ -7,15 +7,12 @@
 //
 
 import Foundation
-import MapKit
 
 class StudentLocation {
     
-    //static var locations: [PinAnnotation] = []
-    //static var errors: [NSError] = []
     
-    func getRecentStudents(completionHandler: (pins: [StudentInformation]?, success:Bool, error: String?) -> Void) {
-        var headers = APIHelper.buildHeaders()
+    func GETStudentInformations(completionHandler: (pins: [StudentInformation]?, success:Bool, error: String?) -> Void) {
+        var headers = buildHeaders()
         var getInfoRequest = APIHelper.getRequest(APIHelper.BaseURLs.MapAPI, api: APIHelper.APIs.StudentLocation, headers: headers, queryString: [String: String]())
         var task = APIHelper.buildTask(getInfoRequest){ (data, error) in
             if let e = error{
@@ -38,8 +35,8 @@ class StudentLocation {
     
 
     //Parse location data into StudentInformation
-    func parseLocationData(body: [String: AnyObject], completionHandler: (success: Bool, error:String?) -> Void) {
-        var headers = APIHelper.buildHeaders()
+    func POSTStudentInformation(body: [String: AnyObject], completionHandler: (success: Bool, error:String?) -> Void) {
+        var headers = buildHeaders()
         var postInfoRequest = APIHelper.postRequest(APIHelper.BaseURLs.MapAPI, api: APIHelper.APIs.StudentLocation, body: body, headers: headers, queryString: [:])
         var task = APIHelper.buildTask(postInfoRequest) { (data, error) in
             if let e = error {
@@ -54,6 +51,13 @@ class StudentLocation {
             }
         }
         
+    }
+    
+    func buildHeaders() -> [String: String] {
+        return [
+            "X-Parse-Application-Id": APIHelper.MapKeys.ParseApplicationID,
+            "X-Parse-REST-API-Key": APIHelper.MapKeys.ParseAPIKey
+        ]
     }
     
 

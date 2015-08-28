@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 
 class Login {
-    func attemptToLogIn(usernameTextField: String, passwordTextField: String, completionHandler: (success: Bool, error: String?) -> Void) {
-        var body = buildLoginBody(usernameTextField, passwordTextField: passwordTextField)
+    func attemptToLogIn(email: String, password: String, completionHandler: (success: Bool, error: String?) -> Void) {
+        var body = buildLoginBody(email, password: password)
         var headers = [String: String]()
         var queryString = [String:String]()
         var loginRequest = APIHelper.postRequest(APIHelper.BaseURLs.Login, api: APIHelper.APIs.Session, body: body, headers: headers, queryString: queryString)
@@ -21,7 +21,6 @@ class Login {
             } else {
                 let subSetData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
                 let response = NSJSONSerialization.JSONObjectWithData(subSetData, options: NSJSONReadingOptions.AllowFragments, error: nil) as? [String : AnyObject]
-                println(response)
                 if let error = response!["error"] as? String {
                     completionHandler(success: false, error: error)
                 } else {
@@ -43,7 +42,6 @@ class Login {
             } else {
                 let subSetData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
                 let response = NSJSONSerialization.JSONObjectWithData(subSetData, options: NSJSONReadingOptions.AllowFragments, error: nil) as? [String : AnyObject]
-                println(response)
                 if let error = response!["error"] as? String {
                     completionHandler(success: false, error: error)
                 } else {
@@ -55,17 +53,17 @@ class Login {
         }
     }
     
-    func buildLoginBody(usernameTextField: String, passwordTextField: String) -> [String: AnyObject] {
+    func buildLoginBody(email: String, password: String) -> [String: AnyObject] {
         return [
             "udacity": [
-                "username": usernameTextField,
-                "password": passwordTextField
+                "username": email,
+                "password": password
             ]
         ]
     }
     
     func buildUser(jsonResponse: [String: AnyObject]) {
-        let user: Users = Users(dictionary: jsonResponse)
+        let user: User = User(dictionary: jsonResponse)
         saveUser(user)
     }
     
@@ -79,36 +77,13 @@ class Login {
         }
     }
     
-    func saveUser(user: Users){
+    func saveUser(user: User){
         if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate{
             appDelegate.user = user
         }
     }
-    
-    
-    
-    func logOut(didComplete: (success: Bool) -> Void) {
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/session")!)
-        request.HTTPMethod = "DELETE"
-        var xsrfCookie: NSHTTPCookie? = nil
-        let sharedCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
-        for cookie in sharedCookieStorage.cookies as! [NSHTTPCookie] {
-            if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
-        }
-        if let xsrfCookie = xsrfCookie {
-            request.addValue(xsrfCookie.value!, forHTTPHeaderField: "X-XSRF-Token")
-        }
-        let session = NSURLSession.sharedSession()
-        let task = session.dataTaskWithRequest(request) { data, response, error in
-            if error != nil { // Handle error…
-                didComplete(success: false)
-                return
-            }
-            let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5)) /* subset response data! */
-            didComplete(success: true)
-        }
-        task.resume()
-    }
+
+
 }
 
 

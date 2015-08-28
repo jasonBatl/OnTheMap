@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Bronson, Jason. All rights reserved.
 //
 
-import UIKit
+import Foundation
 import MapKit
 
 class PinAnnotation: NSObject, MKAnnotation {

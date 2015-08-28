@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Users {
+struct User {
     
     var id = ""
     var key = ""
